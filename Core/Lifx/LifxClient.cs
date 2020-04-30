@@ -1,4 +1,4 @@
-namespace Lights.Lifx
+namespace Lights.Core.Lifx
 {
     using System;
     using System.Net.Http;
@@ -10,7 +10,6 @@ namespace Lights.Lifx
 
     public class LifxClient
     {
-        private const string ACCESS_TOKEN = "c5df807c41d0c73aac5e0b9ee830954b4b33226ab42a0f627fa5ac75e12045e3";
 
         private HttpClient client;
 
@@ -33,8 +32,10 @@ namespace Lights.Lifx
 
         private async Task<string> CallApi(string url, HttpMethod method, string body)
         {
+            string accessToken = await LifxAccess.GetTokenLazy();
+
             HttpRequestMessage message = new HttpRequestMessage(method, url);
-            message.Headers.Add("Authorization", $"Bearer {ACCESS_TOKEN}");
+            message.Headers.Add("Authorization", $"Bearer {accessToken}");
 
             if (body != null)
             {

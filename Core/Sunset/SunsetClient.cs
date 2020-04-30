@@ -1,4 +1,4 @@
-namespace Lights.Sunset
+namespace Lights.Core.Sunset
 {
     using System.Net.Http;
     using System;
@@ -6,7 +6,6 @@ namespace Lights.Sunset
     using System.Threading.Tasks;
 
     using Newtonsoft.Json;
-
 
     public class SunsetClient
     {
@@ -16,23 +15,25 @@ namespace Lights.Sunset
 
         private string currentDateKey;
 
-        private DateTimeOffset currentSunset;
+        private TimeSpan currentSunset;
 
         public SunsetClient(HttpClient client)
         {
             this.client = client;
         }
 
-        public async Task<DateTimeOffset> GetSeattleSunsetTime()
+        public async Task<TimeSpan> GetSeattleSunsetTime()
         {
+            DateTime utcNow = DateTime.UtcNow;
             DateTime nowPacific = TimeZoneInfo.ConvertTimeFromUtc(
-                DateTime.UtcNow, 
+                utcNow, 
                 TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
 
             string dateKey = nowPacific.ToString("yyyyMMdd");
 
             if (this.currentDateKey == null || this.currentDateKey != dateKey)
             {
+                // Homepage: https://sunrise-sunset.org/api
                 HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, $"https://api.sunrise-sunset.org/json?lat={SEATTLE_LAT}&lng={SEATTLE_LON}");
                 var response = await client.SendAsync(message);
 
@@ -45,8 +46,12 @@ namespace Lights.Sunset
                 SunriseSunsetResult sunriseSunset = JsonConvert.DeserializeObject<SunriseSunsetResult>(json);
 
                 string sunsetString = sunriseSunset.Results.Sunset;
+                DateTime utcSunset = DateTime.Parse(sunsetString, null, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
-                this.currentSunset = DateTimeOffset.Parse(sunsetString, null, DateTimeStyles.AssumeUniversal);
+                this.currentSunset = TimeZoneInfo.ConvertTimeFromUtc(
+                    utcSunset, 
+                    TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
+                    .TimeOfDay;
                 this.currentDateKey = dateKey;
             }
 

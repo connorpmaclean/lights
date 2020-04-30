@@ -1,4 +1,4 @@
-namespace Lights
+namespace Lights.Core
 {
     using System;
     using System.Collections.Generic;

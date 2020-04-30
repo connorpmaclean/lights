@@ -1,34 +1,45 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-
-using Newtonsoft.Json;
-using Lights.Lifx;
-using Lights.Sunset;
-
-namespace Lights
+﻿namespace Lights.Core
 {
-    public class Program
-    {
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Text;
 
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Console;
+    using Newtonsoft.Json;
+    using Lights.Core.Lifx;
+    using Lights.Core.Sunset;
+
+    public class LightsCore
+    {
         private const int LIGHT_KELVIN_HIGH = 5500;
         private const int LIGHT_KELVIN_LOW = 3000;
 
         private static HttpClient httpClient;
 
-        static async Task Main(string[] args)
+        public static async Task Run(ILogger logger = null)
         {
+            if (logger == null)
+            {
+                var loggerFactory = LoggerFactory.Create(builder =>
+                {
+                    builder.AddConsole();
+                });
+
+                logger = loggerFactory.CreateLogger<LightsCore>();
+            }
+
             httpClient = new HttpClient();
             SunsetClient sunsetClient = new SunsetClient(httpClient);
             LifxClient lifxClient = new LifxClient(httpClient);
 
             var allLights = await lifxClient.GetAllLights();
 
-            int desiredKelvin = await GetDesiredKelvin(sunsetClient);
-            Console.WriteLine(desiredKelvin);
+            int desiredKelvin = await GetDesiredKelvin(sunsetClient, logger);
+            logger.LogInformation($"Desired kelvin: {desiredKelvin}");
 
             var changes = new List<State>();
 
@@ -38,11 +49,11 @@ namespace Lights
                 {
                     if (light.Color.Kelvin == desiredKelvin)
                     {
-                        Console.WriteLine($"Skipping {light.Label} because Kelvinj is already {desiredKelvin}.");
+                        logger.LogInformation($"Skipping {light.Label} because Kelvin is already {desiredKelvin}.");
                     }
                     else
                     {
-                        Console.WriteLine($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
+                        logger.LogInformation($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
                         changes.Add(new State()
                         {
                             Selector = $"label:{light.Label}",
@@ -52,7 +63,7 @@ namespace Lights
                 }
                 else
                 {
-                    Console.WriteLine($"Skipping {light.Label} because they are off.");
+                    logger.LogInformation($"Skipping {light.Label} because they are off.");
                 }
             }
 
@@ -65,15 +76,18 @@ namespace Lights
 
                 await lifxClient.PutStates(states);
             }
-            
         }
 
-
-        private static async Task<int> GetDesiredKelvin(SunsetClient sunsetClient)
+        private static async Task<int> GetDesiredKelvin(SunsetClient sunsetClient, ILogger logger)
         {
-            DateTimeOffset endTime = await sunsetClient.GetSeattleSunsetTime();
-            DateTimeOffset beginTime =  endTime.AddHours(-2);
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            TimeSpan endTime = await sunsetClient.GetSeattleSunsetTime();
+            TimeSpan beginTime =  endTime.Add(TimeSpan.FromHours(-2));
+            TimeSpan now = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow, 
+                TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
+                .TimeOfDay;
+
+            logger.LogInformation($"Time now: {now}, begin: {beginTime}, end (sunset): {endTime}.");
             
             if (now < beginTime)
             {

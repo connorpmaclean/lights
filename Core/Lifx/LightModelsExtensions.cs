@@ -1,4 +1,4 @@
-namespace Lights.Lifx
+namespace Lights.Core.Lifx
 {
     public static class LifxModelsExtensions
     {
