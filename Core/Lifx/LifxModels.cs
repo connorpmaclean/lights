@@ -113,6 +113,9 @@ namespace Lights.Core.Lifx
     {
         [JsonProperty("states")]
         public List<State> StateList { get; set; }
+
+        [JsonProperty("fast")]
+        public bool Fast { get; set; }
     }
 
     public partial class State

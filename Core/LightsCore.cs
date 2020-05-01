@@ -36,14 +36,14 @@
             SunsetClient sunsetClient = new SunsetClient(httpClient);
             LifxClient lifxClient = new LifxClient(httpClient);
 
-            var allLights = await lifxClient.GetAllLights();
+            var getAllLightsTask = lifxClient.GetAllLights();
 
             int desiredKelvin = await GetDesiredKelvin(sunsetClient, logger);
             logger.LogInformation($"Desired kelvin: {desiredKelvin}");
 
             var changes = new List<State>();
-
-            foreach (Light light in allLights)
+            var allLightsResult = await getAllLightsTask;
+            foreach (Light light in allLightsResult)
             {
                 if (light.IsOn())
                 {
@@ -71,6 +71,7 @@
             {
                 var states = new States()
                 {
+                    Fast = true, // See https://api.developer.lifx.com/v1/docs/set-state#fast-mode
                     StateList = changes
                 };
 
