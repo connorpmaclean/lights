@@ -81,26 +81,39 @@
 
         private static async Task<int> GetDesiredKelvin(SunsetClient sunsetClient, ILogger logger)
         {
-            TimeSpan endTime = await sunsetClient.GetSeattleSunsetTime();
-            TimeSpan beginTime =  endTime.Add(TimeSpan.FromHours(-2));
+            var sunsetSunrise = await sunsetClient.GetSeattleSunsetTime();
+
+            TimeSpan endSunriseTime = sunsetSunrise.Sunrise;
+            TimeSpan beginSunriseTime = endSunriseTime.Add(TimeSpan.FromHours(-2));
+
+            TimeSpan endSunsetTime = sunsetSunrise.Sunset;
+            TimeSpan beginSunsetTime =  endSunsetTime.Add(TimeSpan.FromHours(-2));
             TimeSpan now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow, 
                 TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
                 .TimeOfDay;
 
-            logger.LogInformation($"Time now: {now}, begin: {beginTime}, end (sunset): {endTime}.");
+            logger.LogInformation($"Time now: {now}, sunrise: {endSunriseTime}, sunset: {endSunsetTime}.");
             
-            if (now < beginTime)
-            {
-                return LIGHT_KELVIN_HIGH;
-            }
-            else if (now > endTime)
+            if (now < beginSunriseTime)
             {
                 return LIGHT_KELVIN_LOW;
             }
+            else if (now < endSunriseTime)
+            {
+                return (int)Map(now.Ticks, beginSunriseTime.Ticks, endSunriseTime.Ticks, LIGHT_KELVIN_LOW, LIGHT_KELVIN_HIGH);
+            }
+            else if (now < beginSunsetTime)
+            {
+                return LIGHT_KELVIN_HIGH;
+            }
+            else if (now < endSunsetTime)
+            {
+                return (int)Map(now.Ticks, beginSunsetTime.Ticks, endSunsetTime.Ticks, LIGHT_KELVIN_HIGH, LIGHT_KELVIN_LOW);
+            }
             else
             {
-                return (int)Map(now.Ticks, beginTime.Ticks, endTime.Ticks, LIGHT_KELVIN_HIGH, LIGHT_KELVIN_LOW);
+                return LIGHT_KELVIN_LOW;
             }
         }
 

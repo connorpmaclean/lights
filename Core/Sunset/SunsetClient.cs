@@ -15,14 +15,14 @@ namespace Lights.Core.Sunset
 
         private string currentDateKey;
 
-        private TimeSpan currentSunset;
+        private SunsetSunrise current;
 
         public SunsetClient(HttpClient client)
         {
             this.client = client;
         }
 
-        public async Task<TimeSpan> GetSeattleSunsetTime()
+        public async Task<SunsetSunrise> GetSeattleSunsetTime()
         {
             DateTime utcNow = DateTime.UtcNow;
             DateTime nowPacific = TimeZoneInfo.ConvertTimeFromUtc(
@@ -45,18 +45,35 @@ namespace Lights.Core.Sunset
                 string json = await response.Content.ReadAsStringAsync();
                 SunriseSunsetResult sunriseSunset = JsonConvert.DeserializeObject<SunriseSunsetResult>(json);
 
-                string sunsetString = sunriseSunset.Results.Sunset;
-                DateTime utcSunset = DateTime.Parse(sunsetString, null, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                TimeSpan sunrise = ConvertResponseToPSTTime(sunriseSunset.Results.Sunrise);
+                TimeSpan sunset = ConvertResponseToPSTTime(sunriseSunset.Results.Sunset);
 
-                this.currentSunset = TimeZoneInfo.ConvertTimeFromUtc(
-                    utcSunset, 
-                    TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
-                    .TimeOfDay;
+                this.current = new SunsetSunrise() 
+                {
+                    Sunrise = sunrise,
+                    Sunset = sunset
+                };
+
                 this.currentDateKey = dateKey;
             }
 
-            return currentSunset;
+            return this.current;
         }
 
+        private static TimeSpan ConvertResponseToPSTTime(string rawResponse)
+        {
+            DateTime utcSunset = DateTime.Parse(rawResponse, null, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+
+            return TimeZoneInfo.ConvertTimeFromUtc(
+                utcSunset, 
+                TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
+                .TimeOfDay;
+        }
+
+        public class SunsetSunrise
+        {
+            public TimeSpan Sunrise { get; set; }
+            public TimeSpan Sunset { get; set; }
+        }
     }
 }
