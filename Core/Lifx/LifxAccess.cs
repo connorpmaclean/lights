@@ -25,7 +25,7 @@ namespace Lights.Core.Lifx
             string connectionString = "RunAs=Developer; DeveloperTool=AzureCli";
             if (Environment.GetEnvironmentVariable("Azure") == "true")
             {
-                connectionString = "RunAs=App;AppId=4624367f-cbd5-4bc8-a03b-df215c82084d";
+                connectionString = "RunAs=App;AppId=219219a0-6a4f-4431-b94c-9b94084dddd4";
             }
 
             var azureServiceTokenProvider = new AzureServiceTokenProvider(connectionString);

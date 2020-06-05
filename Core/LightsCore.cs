@@ -45,25 +45,18 @@
             var allLightsResult = await getAllLightsTask;
             foreach (Light light in allLightsResult)
             {
-                if (light.IsOn())
+                if (light.Color.Kelvin == desiredKelvin)
                 {
-                    if (light.Color.Kelvin == desiredKelvin)
-                    {
-                        logger.LogInformation($"Skipping {light.Label} because Kelvin is already {desiredKelvin}.");
-                    }
-                    else
-                    {
-                        logger.LogInformation($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
-                        changes.Add(new State()
-                        {
-                            Selector = $"label:{light.Label}",
-                            Color = $"kelvin:{desiredKelvin}"
-                        });
-                    }
+                    logger.LogInformation($"Skipping {light.Label} because Kelvin is already {desiredKelvin}.");
                 }
                 else
                 {
-                    logger.LogInformation($"Skipping {light.Label} because they are off.");
+                    logger.LogInformation($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
+                    changes.Add(new State()
+                    {
+                        Selector = $"label:{light.Label}",
+                        Color = $"kelvin:{desiredKelvin}"
+                    });
                 }
             }
 
