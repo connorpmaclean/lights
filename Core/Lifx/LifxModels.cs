@@ -55,7 +55,7 @@ namespace Lights.Core.Lifx
         public double Hue { get; set; }
 
         [JsonProperty("saturation")]
-        public long Saturation { get; set; }
+        public float Saturation { get; set; }
 
         [JsonProperty("kelvin")]
         public long Kelvin { get; set; }

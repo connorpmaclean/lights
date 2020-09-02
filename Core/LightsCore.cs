@@ -49,6 +49,10 @@
                 {
                     logger.LogInformation($"Skipping {light.Label} because Kelvin is already {desiredKelvin}.");
                 }
+                else if (light.Color.Saturation > 0)
+                {
+                    logger.LogInformation($"Skipping {light.Label} because saturation is greater than zero ({light.Color.Saturation}) indicating a custom colour is set.");
+                }
                 else
                 {
                     logger.LogInformation($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
