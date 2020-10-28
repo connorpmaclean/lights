@@ -54,4 +54,3 @@ jobs:
       with:
         app-name: ${{ secrets.AZURE_FUNCTIONAPP }}
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-        publish-profile: ${{ steps.deploy.outputs.publishProfile }}

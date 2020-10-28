@@ -98,11 +98,5 @@
         "Request_Source": "IbizaWebAppExtensionCreate"
       }
     }
-  ],
-  "outputs": {
-    "publishProfile": {
-      "type": "object",
-      "value": "[list(concat('Microsoft.Web/sites/', variables('functionAppName') ,'/config/publishingcredentials'), '2016-08-01')]"
-    }
-  }
+  ]
 }
