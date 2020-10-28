@@ -3,14 +3,17 @@ namespace Lights.Core.Sunset
     using System.Net.Http;
     using System;
     using System.Globalization;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     using Newtonsoft.Json;
+    using TimeZoneConverter;
 
     public class SunsetClient
     {
         public const double SEATTLE_LAT = 47.60357D;
         public const double SEATTLE_LON = -122.32945D;
+
         private HttpClient client;
 
         private string currentDateKey;
@@ -27,7 +30,7 @@ namespace Lights.Core.Sunset
             DateTime utcNow = DateTime.UtcNow;
             DateTime nowPacific = TimeZoneInfo.ConvertTimeFromUtc(
                 utcNow, 
-                TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+                PacificTimeZone);
 
             string dateKey = nowPacific.ToString("yyyyMMdd");
 
@@ -58,6 +61,19 @@ namespace Lights.Core.Sunset
             }
 
             return this.current;
+        }
+
+        private static TimeZoneInfo PacificTimeZone
+        {
+            get
+            {
+                string windowsPstTimeZoneId = "Pacific Standard Time";
+                string timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    ? windowsPstTimeZoneId
+                    : TZConvert.WindowsToIana(windowsPstTimeZoneId);
+
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
         }
 
         private static TimeSpan ConvertResponseToPSTTime(string rawResponse)
