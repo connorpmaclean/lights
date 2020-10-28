@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Runtime.InteropServices;
     using System.Text;
 
     using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@
     using Newtonsoft.Json;
     using Lights.Core.Lifx;
     using Lights.Core.Sunset;
+    using TimeZoneConverter;
 
     public class LightsCore
     {

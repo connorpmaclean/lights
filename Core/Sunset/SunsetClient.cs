@@ -3,11 +3,9 @@ namespace Lights.Core.Sunset
     using System.Net.Http;
     using System;
     using System.Globalization;
-    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     using Newtonsoft.Json;
-    using TimeZoneConverter;
 
     public class SunsetClient
     {
