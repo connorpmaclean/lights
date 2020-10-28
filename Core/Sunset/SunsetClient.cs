@@ -30,7 +30,7 @@ namespace Lights.Core.Sunset
             DateTime utcNow = DateTime.UtcNow;
             DateTime nowPacific = TimeZoneInfo.ConvertTimeFromUtc(
                 utcNow, 
-                PacificTimeZone);
+                LightsCore.PacificTimeZone);
 
             string dateKey = nowPacific.ToString("yyyyMMdd");
 
@@ -61,19 +61,6 @@ namespace Lights.Core.Sunset
             }
 
             return this.current;
-        }
-
-        private static TimeZoneInfo PacificTimeZone
-        {
-            get
-            {
-                string windowsPstTimeZoneId = "Pacific Standard Time";
-                string timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? windowsPstTimeZoneId
-                    : TZConvert.WindowsToIana(windowsPstTimeZoneId);
-
-                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            }
         }
 
         private static TimeSpan ConvertResponseToPSTTime(string rawResponse)

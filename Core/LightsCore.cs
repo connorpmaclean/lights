@@ -20,6 +20,19 @@
 
         private static HttpClient httpClient;
 
+        public static TimeZoneInfo PacificTimeZone
+        {
+            get
+            {
+                string windowsPstTimeZoneId = "Pacific Standard Time";
+                string timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    ? windowsPstTimeZoneId
+                    : TZConvert.WindowsToIana(windowsPstTimeZoneId);
+
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+        }
+
         public static async Task Run(ILogger logger = null)
         {
             if (logger == null)
@@ -87,7 +100,7 @@
             TimeSpan beginSunsetTime =  endSunsetTime.Add(TimeSpan.FromHours(-2));
             TimeSpan now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow, 
-                TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
+                PacificTimeZone)
                 .TimeOfDay;
 
             logger.LogInformation($"Time now: {now}, sunrise: {endSunriseTime}, sunset: {endSunsetTime}.");
