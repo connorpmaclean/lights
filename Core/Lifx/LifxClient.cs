@@ -32,7 +32,7 @@ namespace Lights.Core.Lifx
 
         private async Task<string> CallApi(string url, HttpMethod method, string body)
         {
-            string accessToken = await LifxAccess.GetTokenLazy();
+            string accessToken = Environment.GetEnvironmentVariable("LifxApiKey");
 
             HttpRequestMessage message = new HttpRequestMessage(method, url);
             message.Headers.Add("Authorization", $"Bearer {accessToken}");
