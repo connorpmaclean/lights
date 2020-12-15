@@ -67,7 +67,7 @@ namespace Lights.Core.Sunset
 
             return TimeZoneInfo.ConvertTimeFromUtc(
                 utcSunset, 
-                TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"))
+                LightsCore.PacificTimeZone)
                 .TimeOfDay;
         }
 
