@@ -1,22 +1,32 @@
-
 namespace Lights.Function
 {
+    using Azure.Storage.Blobs;
+    using Lights.Core;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Threading.Tasks;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Extensions.Logging;
-
-    using Lights.Core;
 
     public static class TimerTrigger
     {
         // Set WEBSITE_TIME_ZONE to Pacific Standard Time
         // func azure functionapp publish cmlights --csharp
-        [FunctionName("LightsOfftime")]
-        public static async Task LightsOfftime([TimerTrigger("*/30 * * * * *")]TimerInfo myTimer, ILogger log)
+        [Function("LightsTimer")]
+        public static async Task Lights([TimerTrigger("*/30 * * * * *")] TimerInfo timer, FunctionContext context)
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            await LightsCore.Run(log);
+            var logger = context.GetLogger("LightsTimer");
+
+            logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+
+            if (await new EnableCheckBlobHandler().IsOn())
+            {
+                logger.LogInformation($"Lights enabled, will run");
+                await LightsCore.Run(logger);
+            }
+            else
+            {
+                logger.LogInformation($"Lights not enabled");
+            }
         }
     }
 }
