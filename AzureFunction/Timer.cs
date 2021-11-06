@@ -12,7 +12,7 @@ namespace Lights.Function
         // Set WEBSITE_TIME_ZONE to Pacific Standard Time
         // func azure functionapp publish cmlights --csharp
         [Function("LightsTimer")]
-        public static async Task Lights([TimerTrigger("*/30 * * * * *")] TimerInfo timer, FunctionContext context)
+        public static async Task Lights([TimerTrigger("*/30 * * * * *", RunOnStartup = true)] TimerInfo timer, FunctionContext context)
         {
             var logger = context.GetLogger("LightsTimer");
 

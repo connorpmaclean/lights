@@ -43,7 +43,7 @@ namespace Lights.Core.Lifx
         public Product Product { get; set; }
 
         [JsonProperty("last_seen")]
-        public DateTimeOffset LastSeen { get; set; }
+        public DateTimeOffset? LastSeen { get; set; }
 
         [JsonProperty("seconds_since_seen")]
         public long SecondsSinceSeen { get; set; }
