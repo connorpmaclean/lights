@@ -1,7 +1,9 @@
 name: Deploy DotNet Core project to Azure Function App
 
 on:
-  [push]
+  push:
+    branches:
+      - main
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
