@@ -2,30 +2,39 @@ namespace Lights.Core.Lifx
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     public class LifxClient
     {
 
-        private HttpClient client;
+        private HttpClient _client;
+
+        private static JsonSerializerOptions s_jsonOptions = new();
+
+        static LifxClient()
+        {
+            s_jsonOptions.Converters.Add(new NullableDateTimeOffsetParser());
+        }
 
         public LifxClient(HttpClient client)
         {
-            this.client = client;
+            _client = client;
         }
 
         public async Task<IEnumerable<Light>> GetAllLights()
         {
             var json = await CallApi("https://api.lifx.com/v1/lights/all", HttpMethod.Get, null);
-            return JsonSerializer.Deserialize<IEnumerable<Light>>(json);
+            return JsonSerializer.Deserialize<IEnumerable<Light>>(json, s_jsonOptions);
         }
 
         public async Task PutStates(States states)
         {
-            string json = JsonSerializer.Serialize(states);
+            string json = JsonSerializer.Serialize(states, s_jsonOptions);
             await CallApi("https://api.lifx.com/v1/lights/states", HttpMethod.Put, json);
         }
 
@@ -41,13 +50,32 @@ namespace Lights.Core.Lifx
                 message.Content = new StringContent(body, Encoding.UTF8, "application/json");
             }
 
-            var response = await this.client.SendAsync(message);
+            var response = await _client.SendAsync(message);
             if (!response.IsSuccessStatusCode)
             {
                 throw new InvalidOperationException(response.StatusCode.ToString());
             }
 
             return await response.Content.ReadAsStringAsync();
+        }
+
+        public class NullableDateTimeOffsetParser : JsonConverter<DateTimeOffset?>
+        {
+            public override DateTimeOffset? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+                if (string.IsNullOrEmpty(value))
+                {
+                    return null;
+                }
+
+                return DateTimeOffset.Parse(reader.GetString());
+            }
+
+            public override void Write(Utf8JsonWriter writer, DateTimeOffset? value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value?.ToString());
+            }
         }
     }
 }
