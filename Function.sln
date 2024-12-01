@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Function", "AzureFunction\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lights", "Core\Lights.csproj", "{590305D3-DFEC-47CC-A78E-A8A58BC50C7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightsExecutable", "Executable\LightsExecutable.csproj", "{2B53D227-C2EE-4929-BAAE-D435ED953CB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{590305D3-DFEC-47CC-A78E-A8A58BC50C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{590305D3-DFEC-47CC-A78E-A8A58BC50C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{590305D3-DFEC-47CC-A78E-A8A58BC50C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B53D227-C2EE-4929-BAAE-D435ED953CB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B53D227-C2EE-4929-BAAE-D435ED953CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B53D227-C2EE-4929-BAAE-D435ED953CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B53D227-C2EE-4929-BAAE-D435ED953CB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

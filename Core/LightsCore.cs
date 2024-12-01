@@ -68,6 +68,10 @@
                 {
                     logger.LogInformation($"Skipping {light.Label} because saturation is greater than zero ({light.Color.Saturation}) indicating a custom colour is set.");
                 }
+                else if (light.Product.Identifier == "lifx_z2")
+                {
+                    logger.LogInformation($"Skipping {light.Label} because saturation it is a strip light.");
+                }
                 else
                 {
                     logger.LogInformation($"Changing {light.Label} from {light.Color.Kelvin} to {desiredKelvin}");
