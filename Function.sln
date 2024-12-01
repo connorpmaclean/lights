@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Function", "AzureFunction\Function.csproj", "{1478654B-2942-4AE4-BECF-64126D22C1B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lights", "Core\Lights.csproj", "{590305D3-DFEC-47CC-A78E-A8A58BC50C7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightsExecutable", "Executable\LightsExecutable.csproj", "{2B53D227-C2EE-4929-BAAE-D435ED953CB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A0EE57D-BCED-45DB-9E5B-9B746EC2989B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main_cmlight.yml = .github\workflows\main_cmlight.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,12 +1,11 @@
 namespace Lights.Core.Lifx
 {
     using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Net.Http;
     using System.Text;
-
-    using Newtonsoft.Json;
+    using System.Text.Json;
+    using System.Threading.Tasks;
 
     public class LifxClient
     {
@@ -21,12 +20,12 @@ namespace Lights.Core.Lifx
         public async Task<IEnumerable<Light>> GetAllLights()
         {
             var json = await CallApi("https://api.lifx.com/v1/lights/all", HttpMethod.Get, null);
-            return JsonConvert.DeserializeObject<IEnumerable<Light>>(json);
+            return JsonSerializer.Deserialize<IEnumerable<Light>>(json);
         }
 
         public async Task PutStates(States states)
         {
-            string json = JsonConvert.SerializeObject(states);
+            string json = JsonSerializer.Serialize(states);
             await CallApi("https://api.lifx.com/v1/lights/states", HttpMethod.Put, json);
         }
 

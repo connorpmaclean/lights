@@ -2,128 +2,126 @@ namespace Lights.Core.Lifx
 {
     using System;
     using System.Collections.Generic;
-
-    using System.Globalization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
+    using System.Text.Json.Serialization;
 
     public partial class Light
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("uuid")]
+        [JsonPropertyName("uuid")]
         public Guid Uuid { get; set; }
 
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Label { get; set; }
 
-        [JsonProperty("connected")]
+        [JsonPropertyName("connected")]
         public bool Connected { get; set; }
 
-        [JsonProperty("power")]
+        [JsonPropertyName("power")]
         public string Power { get; set; }
 
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
         public Color Color { get; set; }
 
-        [JsonProperty("brightness")]
+        [JsonPropertyName("brightness")]
         public double Brightness { get; set; }
 
-        [JsonProperty("effect")]
+        [JsonPropertyName("effect")]
         public string Effect { get; set; }
 
-        [JsonProperty("group")]
+        [JsonPropertyName("group")]
         public Group Group { get; set; }
 
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public Group Location { get; set; }
 
-        [JsonProperty("product")]
+        [JsonPropertyName("product")]
         public Product Product { get; set; }
 
-        [JsonProperty("last_seen")]
+        [JsonPropertyName("last_seen")]
         public DateTimeOffset? LastSeen { get; set; }
 
-        [JsonProperty("seconds_since_seen")]
+        [JsonPropertyName("seconds_since_seen")]
         public long SecondsSinceSeen { get; set; }
     }
 
     public partial class Color
     {
-        [JsonProperty("hue")]
+        [JsonPropertyName("hue")]
         public double Hue { get; set; }
 
-        [JsonProperty("saturation")]
+        [JsonPropertyName("saturation")]
         public float Saturation { get; set; }
 
-        [JsonProperty("kelvin")]
+        [JsonPropertyName("kelvin")]
         public long Kelvin { get; set; }
     }
 
     public partial class Group
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
     }
 
     public partial class Product
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("identifier")]
+        [JsonPropertyName("identifier")]
         public string Identifier { get; set; }
 
-        [JsonProperty("company")]
+        [JsonPropertyName("company")]
         public string Company { get; set; }
 
-        [JsonProperty("capabilities")]
+        [JsonPropertyName("capabilities")]
         public Capabilities Capabilities { get; set; }
     }
 
     public partial class Capabilities
     {
-        [JsonProperty("has_color")]
+        [JsonPropertyName("has_color")]
         public bool HasColor { get; set; }
 
-        [JsonProperty("has_variable_color_temp")]
+        [JsonPropertyName("has_variable_color_temp")]
         public bool HasVariableColorTemp { get; set; }
 
-        [JsonProperty("has_ir")]
+        [JsonPropertyName("has_ir")]
         public bool HasIr { get; set; }
 
-        [JsonProperty("has_chain")]
+        [JsonPropertyName("has_chain")]
         public bool HasChain { get; set; }
 
-        [JsonProperty("has_multizone")]
+        [JsonPropertyName("has_multizone")]
         public bool HasMultizone { get; set; }
 
-        [JsonProperty("min_kelvin")]
+        [JsonPropertyName("min_kelvin")]
         public long MinKelvin { get; set; }
 
-        [JsonProperty("max_kelvin")]
+        [JsonPropertyName("max_kelvin")]
         public long MaxKelvin { get; set; }
     }
 
     public partial class States
     {
-        [JsonProperty("states")]
+        [JsonPropertyName("states")]
         public List<State> StateList { get; set; }
 
-        [JsonProperty("fast")]
+        [JsonPropertyName("fast")]
         public bool Fast { get; set; }
     }
 
     public partial class State
     {
-        [JsonProperty("selector")]
+        [JsonPropertyName("selector")]
         public string Selector { get; set; }
 
-        [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("color")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Color { get; set; }
     }
 }

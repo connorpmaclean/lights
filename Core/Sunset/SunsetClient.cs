@@ -4,8 +4,7 @@ namespace Lights.Core.Sunset
     using System;
     using System.Globalization;
     using System.Threading.Tasks;
-
-    using Newtonsoft.Json;
+    using System.Text.Json;
 
     public class SunsetClient
     {
@@ -44,7 +43,7 @@ namespace Lights.Core.Sunset
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                SunriseSunsetResult sunriseSunset = JsonConvert.DeserializeObject<SunriseSunsetResult>(json);
+                SunriseSunsetResult sunriseSunset = JsonSerializer.Deserialize<SunriseSunsetResult>(json);
 
                 TimeSpan sunrise = ConvertResponseToPSTTime(sunriseSunset.Results.Sunrise);
                 TimeSpan sunset = ConvertResponseToPSTTime(sunriseSunset.Results.Sunset);

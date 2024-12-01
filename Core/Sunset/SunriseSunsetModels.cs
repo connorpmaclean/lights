@@ -1,51 +1,47 @@
 namespace Lights.Core
 {
     using System;
-    using System.Collections.Generic;
-
-    using System.Globalization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
+    using System.Text.Json.Serialization;
 
     public partial class SunriseSunsetResult
     {
-        [JsonProperty("results")]
+        [JsonPropertyName("results")]
         public Results Results { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 
     public partial class Results
     {
-        [JsonProperty("sunrise")]
+        [JsonPropertyName("sunrise")]
         public string Sunrise { get; set; }
 
-        [JsonProperty("sunset")]
+        [JsonPropertyName("sunset")]
         public string Sunset { get; set; }
 
-        [JsonProperty("solar_noon")]
+        [JsonPropertyName("solar_noon")]
         public string SolarNoon { get; set; }
 
-        [JsonProperty("day_length")]
-        public DateTimeOffset DayLength { get; set; }
+        [JsonPropertyName("day_length")]
+        public string DayLength { get; set; }
 
-        [JsonProperty("civil_twilight_begin")]
+        [JsonPropertyName("civil_twilight_begin")]
         public string CivilTwilightBegin { get; set; }
 
-        [JsonProperty("civil_twilight_end")]
+        [JsonPropertyName("civil_twilight_end")]
         public string CivilTwilightEnd { get; set; }
 
-        [JsonProperty("nautical_twilight_begin")]
+        [JsonPropertyName("nautical_twilight_begin")]
         public string NauticalTwilightBegin { get; set; }
 
-        [JsonProperty("nautical_twilight_end")]
+        [JsonPropertyName("nautical_twilight_end")]
         public string NauticalTwilightEnd { get; set; }
 
-        [JsonProperty("astronomical_twilight_begin")]
+        [JsonPropertyName("astronomical_twilight_begin")]
         public string AstronomicalTwilightBegin { get; set; }
 
-        [JsonProperty("astronomical_twilight_end")]
+        [JsonPropertyName("astronomical_twilight_end")]
         public string AstronomicalTwilightEnd { get; set; }
     }
 }
